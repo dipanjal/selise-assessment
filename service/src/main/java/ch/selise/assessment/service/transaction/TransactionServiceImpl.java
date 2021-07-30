@@ -4,7 +4,7 @@ import ch.selise.assessment.entity.AccountEntity;
 import ch.selise.assessment.model.ValidationResult;
 import ch.selise.assessment.model.dto.TransactionRequestDTO;
 import ch.selise.assessment.model.request.TransactionRequest;
-import ch.selise.assessment.repository.AccountRepository;
+import ch.selise.assessment.service.AccountEntityService;
 import ch.selise.assessment.statics.TransactionType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionModelMapper mapper;
     private final TransactionValidationService validationService;
-    private final AccountRepository repository;
+    private final AccountEntityService entityService;
 
     @Override
     public String transaction(TransactionRequest request) {
@@ -46,8 +46,8 @@ public class TransactionServiceImpl implements TransactionService {
     private void debitCredit(AccountEntity source, AccountEntity destination, double amount){
         source.setBalance(source.getBalance() - amount);
         destination.setBalance(destination.getBalance() + amount);
-        repository.save(source);
-        repository.save(destination);
+        entityService.save(source);
+        entityService.save(destination);
     }
 
 }
