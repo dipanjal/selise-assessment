@@ -1,5 +1,6 @@
 package ch.selise.assessment.service.transaction;
 
+import ch.selise.assessment.entity.TransactionEntity;
 import ch.selise.assessment.model.dto.TransactionRequestDTO;
 import ch.selise.assessment.model.request.TransactionRequest;
 import org.springframework.stereotype.Component;
@@ -23,5 +24,17 @@ public class TransactionModelMapper {
                 .destinationAccountNumber(decodeToString(request.getDestinationAccountNumber()))
                 .note(request.getNote())
                 .build();
+    }
+
+    public TransactionEntity convertToTransactionEntity(TransactionRequestDTO dto){
+        TransactionEntity entity = new TransactionEntity();
+        entity.setRequestId(dto.getRequestId());
+        entity.setRequester(dto.getRequester());
+        entity.setTransactionType(dto.getTransactionType());
+        entity.setSourceAccountNumber(dto.getSourceAccountNumber());
+        entity.setAmount(dto.getAmount());
+        entity.setDestinationAccountNumber(dto.getDestinationAccountNumber());
+        entity.setNote(dto.getNote());
+        return entity;
     }
 }

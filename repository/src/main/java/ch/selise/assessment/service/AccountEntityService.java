@@ -18,7 +18,7 @@ public class AccountEntityService extends BaseCRUDService<AccountEntity, Account
         super(repository);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Optional<AccountEntity> findByAccountNumber(String accountNumber){
         return repository.findDistinctByAccountNumber(accountNumber);
     }

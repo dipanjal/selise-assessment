@@ -1,13 +1,17 @@
 package ch.selise.assessment.service.transaction;
 
 import ch.selise.assessment.entity.AccountEntity;
+import ch.selise.assessment.entity.TransactionEntity;
 import ch.selise.assessment.model.ValidationResult;
 import ch.selise.assessment.model.dto.TransactionRequestDTO;
 import ch.selise.assessment.model.request.TransactionRequest;
 import ch.selise.assessment.service.AccountEntityService;
+import ch.selise.assessment.service.TransactionEntityService;
 import ch.selise.assessment.statics.TransactionType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author dipanjal
@@ -20,6 +24,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionModelMapper mapper;
     private final TransactionValidationService validationService;
     private final AccountEntityService entityService;
+    private final TransactionEntityService transactionEntityService;
 
     @Override
     public String transaction(TransactionRequest request) {
@@ -28,9 +33,13 @@ public class TransactionServiceImpl implements TransactionService {
 
         ValidationResult result = validationService.validateTransaction(dto);
 
-        return TransactionType.isTransfer(dto.getTransactionType())
+        String responseMessage = TransactionType.isTransfer(dto.getTransactionType())
                 ? transfer(dto, result)
                 : reverse(dto, result);
+
+        this.saveTransactionHistory(dto);
+
+        return responseMessage;
     }
 
     private String transfer(TransactionRequestDTO dto, ValidationResult result) {
@@ -46,8 +55,12 @@ public class TransactionServiceImpl implements TransactionService {
     private void debitCredit(AccountEntity source, AccountEntity destination, double amount){
         source.setBalance(source.getBalance() - amount);
         destination.setBalance(destination.getBalance() + amount);
-        entityService.save(source);
-        entityService.save(destination);
+        entityService.save(List.of(source, destination));
+    }
+
+    private void saveTransactionHistory(TransactionRequestDTO dto) {
+        TransactionEntity entity = mapper.convertToTransactionEntity(dto);
+        transactionEntityService.save(entity);
     }
 
 }
