@@ -2,11 +2,12 @@ package ch.selise.assessment.service.transaction;
 
 import ch.selise.assessment.service.AccountEntityService;
 import ch.selise.assessment.entity.AccountEntity;
-import ch.selise.assessment.exception.FundTransferException;
+import ch.selise.assessment.exception.TransactionException;
 import ch.selise.assessment.exception.InvalidArgumentException;
 import ch.selise.assessment.exception.RecordNotFoundException;
 import ch.selise.assessment.model.ValidationResult;
 import ch.selise.assessment.model.dto.TransactionRequestDTO;
+import ch.selise.assessment.service.TransactionEntityService;
 import ch.selise.assessment.statics.TransactionType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,12 +21,15 @@ import org.springframework.stereotype.Service;
 public class TransactionValidationServiceImpl implements TransactionValidationService {
 
     private final AccountEntityService accountEntityService;
+    private final TransactionEntityService transactionEntityService;
 
     @Override
     public ValidationResult validateTransaction(TransactionRequestDTO requestDTO) {
 
         if(TransactionType.isNotValid(requestDTO.getTransactionType()))
             throw new InvalidArgumentException("Invalid Transaction Type");
+
+        this.checkUniqueRequestId(requestDTO.getRequestId());
 
         AccountEntity source = accountEntityService
                 .findByAccountNumber(requestDTO.getSourceAccountNumber())
@@ -51,6 +55,14 @@ public class TransactionValidationServiceImpl implements TransactionValidationSe
 
     private void checkAccountBalance(AccountEntity senderAccount, double amount){
         if(senderAccount.getBalance() < amount)
-            throw new FundTransferException("Insufficient Balance");
+            throw new TransactionException("Insufficient Balance");
+    }
+
+    private void checkUniqueRequestId(String requestId){
+
+        transactionEntityService.findByRequestId(requestId)
+                .ifPresent(t -> {
+                    throw new InvalidArgumentException("Request id must be unique");
+                });
     }
 }

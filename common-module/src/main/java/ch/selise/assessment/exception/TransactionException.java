@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
  * @since 0.0.1
  */
 @NoArgsConstructor
-public class FundTransferException extends RuntimeException {
-    public FundTransferException(String message) {
+public class TransactionException extends RuntimeException {
+    public TransactionException(String message) {
         super(message);
     }
 
-    public FundTransferException(String message, Throwable cause) {
+    public TransactionException(String message, Throwable cause) {
         super(message, cause);
     }
 }
