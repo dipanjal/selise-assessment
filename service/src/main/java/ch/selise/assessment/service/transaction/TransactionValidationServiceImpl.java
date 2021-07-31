@@ -1,5 +1,6 @@
 package ch.selise.assessment.service.transaction;
 
+import ch.selise.assessment.model.MessageProperty;
 import ch.selise.assessment.service.AccountEntityService;
 import ch.selise.assessment.entity.AccountEntity;
 import ch.selise.assessment.exception.TransactionException;
@@ -22,22 +23,23 @@ public class TransactionValidationServiceImpl implements TransactionValidationSe
 
     private final AccountEntityService accountEntityService;
     private final TransactionEntityService transactionEntityService;
+    private final MessageProperty property;
 
     @Override
     public ValidationResult validateTransaction(TransactionRequestDTO requestDTO) {
 
         if(TransactionType.isNotValid(requestDTO.getTransactionType()))
-            throw new InvalidArgumentException("Invalid Transaction Type");
+            throw new InvalidArgumentException(property.getInvalidTransactionTypeError());
 
         this.checkUniqueRequestId(requestDTO.getRequestId());
 
         AccountEntity source = accountEntityService
                 .findByAccountNumber(requestDTO.getSourceAccountNumber())
-                .orElseThrow(() -> new RecordNotFoundException("Source Account Not Found"));
+                .orElseThrow(() -> new RecordNotFoundException(property.getSourceAccNotFoundError()));
 
         AccountEntity destination = accountEntityService
                 .findByAccountNumber(requestDTO.getDestinationAccountNumber())
-                .orElseThrow(() -> new RecordNotFoundException("Destination Account Not Found"));
+                .orElseThrow(() -> new RecordNotFoundException(property.getDestinationAccNotFoundError()));
 
         validateBalanceEligibility(source, destination, requestDTO.getTransactionType(), requestDTO.getAmount());
 
@@ -55,14 +57,14 @@ public class TransactionValidationServiceImpl implements TransactionValidationSe
 
     private void checkAccountBalance(AccountEntity senderAccount, double amount){
         if(senderAccount.getBalance() < amount)
-            throw new TransactionException("Insufficient Balance");
+            throw new TransactionException(property.getInsufficientBalanceError());
     }
 
     private void checkUniqueRequestId(String requestId){
 
         transactionEntityService.findByRequestId(requestId)
                 .ifPresent(t -> {
-                    throw new InvalidArgumentException("Request id must be unique");
+                    throw new InvalidArgumentException(property.getRequestIdDuplicateError());
                 });
     }
 }

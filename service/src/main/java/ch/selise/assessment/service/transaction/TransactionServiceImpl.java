@@ -1,5 +1,6 @@
 package ch.selise.assessment.service.transaction;
 
+import ch.selise.assessment.model.MessageProperty;
 import ch.selise.assessment.model.ValidationResult;
 import ch.selise.assessment.model.dto.TransactionRequestDTO;
 import ch.selise.assessment.model.request.TransactionRequest;
@@ -22,6 +23,8 @@ public class TransactionServiceImpl implements TransactionService {
     private final FundTransferService fundTransferService;
     private final TransactionEntityService transactionEntityService;
 
+    private final MessageProperty property;
+
     @Override
     public String transaction(TransactionRequest request) {
         TransactionRequestDTO dto = mapper.convertToDto(request);
@@ -37,12 +40,12 @@ public class TransactionServiceImpl implements TransactionService {
 
     private String transfer(TransactionRequestDTO dto, ValidationResult result) {
         fundTransferService.transferFund(result.getSource(), result.getDestination(), dto.getAmount());
-        return "Transaction Successful";
+        return property.getTransferSuccessful();
     }
 
     private String reverse(TransactionRequestDTO dto, ValidationResult result) {
         fundTransferService.transferFund(result.getDestination(), result.getSource(), dto.getAmount());
-        return "Reverse Successful";
+        return property.getReverseSuccessful();
     }
 
     private void saveTransactionHistory(TransactionRequestDTO dto) {

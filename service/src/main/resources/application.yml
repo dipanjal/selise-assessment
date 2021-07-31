@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/selise-db}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:toor}
+
+message-property:
+  transfer-successful: Transaction successful
+  reverse-successful: Reverse successful
+  invalid-transaction-type-error: Invalid Transaction Type
+  source-acc-not-found-error: Source Account Not Found
+  destination-acc-not-found-error: Destination Account Not Found
+  insufficient-balance-error: Insufficient Balance
+  request-id-duplicate-error: Duplicate Request ID found

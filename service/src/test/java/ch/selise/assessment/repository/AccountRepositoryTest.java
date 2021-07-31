@@ -20,7 +20,7 @@ public class AccountRepositoryTest {
 
     @Test
     public void testFindByAccountNumber(){
-        String accountNumber = "32341200923487X";
+        String accountNumber = "32341200923487";
         AccountEntity entity = service
                 .findByAccountNumber(accountNumber)
                 .orElseThrow(RecordNotFoundException::new);

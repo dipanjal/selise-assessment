@@ -25,7 +25,7 @@ public class TransactionValidationTest {
                 .sourceAccountNumber("001241009211439")
                 .destinationAccountNumber("32341200923487")
                 .transactionType(TransactionType.TRANSFER)
-                .amount(10000.00)
+                .amount(1500.00)
                 .build();
         Assertions.assertNotNull(service.validateTransaction(dto));
     }
