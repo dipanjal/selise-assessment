@@ -8,7 +8,8 @@ create table account
     address        varchar(500)     null,
     account_number varchar(255)     null,
     balance        double default 0 not null,
-    status         int    default 1 null
+    status         int    default 1 null,
+    version        bigint           not null
 );
 
 create table transaction
