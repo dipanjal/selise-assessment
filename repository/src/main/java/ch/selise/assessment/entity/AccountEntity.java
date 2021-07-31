@@ -24,4 +24,7 @@ public class AccountEntity {
     @Column(name = "balance", nullable = false)
     private double balance;
     private int status;
+
+    @Version
+    private long version;
 }

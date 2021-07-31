@@ -11,8 +11,6 @@ import ch.selise.assessment.statics.TransactionType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 /**
  * @author dipanjal
  * @since 0.0.1
@@ -52,10 +50,20 @@ public class TransactionServiceImpl implements TransactionService {
         return "Reverse Successful";
     }
 
-    private void debitCredit(AccountEntity source, AccountEntity destination, double amount){
-        source.setBalance(source.getBalance() - amount);
-        destination.setBalance(destination.getBalance() + amount);
-        entityService.save(List.of(source, destination));
+    /** @Todo Need to move to Transaction Service */
+    private void debitCredit(AccountEntity source, AccountEntity destination, double amount) {
+        this.withdraw(source, amount);
+        this.deposit(destination, amount);
+    }
+
+    private void withdraw(AccountEntity account, double amount) {
+        account.setBalance(account.getBalance() - amount);
+        entityService.save(account);
+    }
+
+    private void deposit(AccountEntity account, double amount) {
+        account.setBalance(account.getBalance() + amount);
+        entityService.save(account);
     }
 
     private void saveTransactionHistory(TransactionRequestDTO dto) {

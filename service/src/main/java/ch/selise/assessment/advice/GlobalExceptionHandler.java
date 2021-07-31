@@ -4,6 +4,7 @@ import ch.selise.assessment.exception.BadRequestException;
 import ch.selise.assessment.exception.InvalidArgumentException;
 import ch.selise.assessment.exception.RecordNotFoundException;
 import ch.selise.assessment.exception.TransactionException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  * @since 0.0.1
  */
 @ControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(BadRequestException.class)
@@ -36,6 +38,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> globalExceptionHandler(Exception ex, WebRequest request) {
+        log.info(ex.getMessage());
+        log.error(ex.getMessage(), ex);
         return this.buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, ex);
     }
 

@@ -2,7 +2,9 @@ package ch.selise.assessment.repository;
 
 import ch.selise.assessment.entity.AccountEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 
+import javax.persistence.LockModeType;
 import java.util.Optional;
 
 /**
@@ -11,5 +13,6 @@ import java.util.Optional;
  */
 
 public interface AccountRepository extends JpaRepository<AccountEntity, Long> {
+    @Lock(LockModeType.OPTIMISTIC)
     Optional<AccountEntity> findDistinctByAccountNumber(String accountNumber);
 }
