@@ -1,24 +1,6 @@
 # Assessment Project
 A Simple Rest API Project for Assessment Test
 
-[![Java CI with Gradle](https://github.com/brain-station-23/customer/actions/workflows/gradle.yml/badge.svg)](https://github.com/brain-station-23/customer/actions/workflows/gradle.yml)
-
-## User Roles
-Cardinity Users can have bellow Roles
-* USER
-* ADMIN
-
-## Status
-We have bellow status for the `Tasks` and `Projects`
-* Open
-* In Progress
-* Closed
-
-# Execution
-* Run the application by executing `CardinityTaskManagerRestApiApplication.java`
-* Import the Postman Collection to test the `API` endpoints
-
-
 ## Endpoints
 
 * Welcome Url
